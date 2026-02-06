@@ -1,0 +1,17 @@
+2026-02-05 16:29:53.401 | INFO     | src.scraper.linkedin_scraper:_init_driver:103 - Driver de Chrome inicializado
+2026-02-05 16:29:53.402 | INFO     | src.scraper.linkedin_scraper:search_jobs:209 - Buscando: https://www.linkedin.com/jobs/search/?keywords=Ia%20developer&location=madrid
+2026-02-05 16:30:04.889 | DEBUG    | src.scraper.linkedin_scraper:search_jobs:227 - Procesando página 1...
+2026-02-05 16:30:04.904 | DEBUG    | src.scraper.linkedin_scraper:search_jobs:250 - Encontradas 70 ofertas con selector: .base-card
+2026-02-05 16:30:08.100 | DEBUG    | src.scraper.linkedin_scraper:search_jobs:278 - Extraída oferta: Desarrollador/a Power Platform
+2026-02-05 16:30:08.131 | DEBUG    | src.scraper.linkedin_scraper:search_jobs:278 - Extraída oferta: Team Leader de Desarrollo Analítico - R&D
+2026-02-05 16:30:08.160 | DEBUG    | src.scraper.linkedin_scraper:search_jobs:278 - Extraída oferta: Desarrollador/a ION Trading
+2026-02-05 16:30:09.169 | INFO     | src.scraper.linkedin_scraper:search_jobs:291 - Se encontraron 3 ofertas
+2026-02-05 16:30:09.169 | DEBUG    | src.scraper.linkedin_scraper:_get_job_description:477 - Obteniendo descripción de: https://es.linkedin.com/jobs/view/desarrollador-a-power-platform-at-minsait-4357714567?position=8&pageNum=2&refId=Rr%2BqlKsElCivqC2IbY1wZQ%3D%3D&trackingId=7U4NXXjcYtXqoAqLV%2FybMA%3D%3D
+2026-02-05 16:30:19.338 | INFO     | src.scraper.linkedin_scraper:_get_job_description:568 - ✅ Descripción obtenida: 594 caracteres
+2026-02-05 16:30:19.850 | DEBUG    | src.scraper.linkedin_scraper:_get_job_description:477 - Obteniendo descripción de: https://es.linkedin.com/jobs/view/team-leader-de-desarrollo-anal%C3%ADtico-r-d-at-chemo-4295893949?position=9&pageNum=2&refId=Rr%2BqlKsElCivqC2IbY1wZQ%3D%3D&trackingId=ZmNGgbFJRRdRg1pQa3r69w%3D%3D
+2026-02-05 16:30:29.131 | INFO     | src.scraper.linkedin_scraper:_get_job_description:568 - ✅ Descripción obtenida: 635 caracteres
+2026-02-05 16:30:30.069 | DEBUG    | src.scraper.linkedin_scraper:_get_job_description:477 - Obteniendo descripción de: https://es.linkedin.com/jobs/view/desarrollador-a-ion-trading-at-grupo-digital-4350652444?position=10&pageNum=2&refId=Rr%2BqlKsElCivqC2IbY1wZQ%3D%3D&trackingId=dbWV6AxHmb2uE9mB6H9lcw%3D%3D
+2026-02-05 16:30:39.260 | INFO     | src.scraper.linkedin_scraper:_get_job_description:568 - ✅ Descripción obtenida: 3122 caracteres
+2026-02-05 16:30:40.326 | DEBUG    | src.scraper.linkedin_scraper:_save_job:703 - Oferta guardada: data\ofertas\bcd09bd4a05c.json
+2026-02-05 16:30:40.327 | DEBUG    | src.scraper.linkedin_scraper:_save_job:703 - Oferta guardada: data\ofertas\6dc1ff69cc81.json
+2026-02-05 16:30:40.328 | DEBUG    | src.scraper.linkedin_scraper:_save_job:703 - Oferta guardada: data\ofertas\34b1e32d9f43.json

@@ -1,0 +1,68 @@
+# AutoCV - Archivos a ignorar
+# ===========================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Entorno virtual
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Datos sensibles - NO SUBIR A GIT
+config/linkedin_config.yaml
+data/mi_perfil.yaml
+
+# Cache de ofertas (opcional mantener)
+# data/ofertas/
+
+# CVs generados
+data/cvs_generados/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Selenium
+*.png
+screenshots/

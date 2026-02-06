@@ -1,0 +1,40 @@
+app:
+  debug: false
+  log_level: INFO
+  name: AutoCV
+  version: 1.0.0
+auto_apply:
+  enabled: false
+  max_applications_per_day: 10
+  require_confirmation: true
+cv_generation:
+  include_photo: false
+  max_pages: 2
+  output_directory: data/cvs_generados
+  output_format: html
+  template: moderno
+web:
+  host: "127.0.0.1"      # Usar "0.0.0.0" para acceso desde otros ordenadores
+  port: 8080
+  open_browser: true      # Abrir navegador automáticamente al iniciar
+  allow_remote: false     # Cambiar a true para permitir acceso remoto
+linkedin:
+  delay_between_requests: 1
+  headless: true
+  search_limit: 50
+  use_existing_browser: false
+  fast_mode: true
+  max_workers: 5
+  fetch_descriptions: true
+ollama:
+  host: http://localhost:11434
+  max_tokens: 4096
+  model: qwen3:4b
+  temperature: 0.3
+  timeout: 120
+paths:
+  generated_cvs: data/cvs_generados
+  jobs_cache: data/ofertas
+  logs: logs
+  profile: data/mi_perfil.yaml
+  templates: src/templates

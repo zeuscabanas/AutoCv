@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div x-data="dashboard()">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+        <p class="text-gray-500 mt-1">Resumen de tu actividad de búsqueda de empleo</p>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Ollama Status -->
+        <div class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500">Estado IA</p>
+                    <p class="text-2xl font-bold mt-1" :class="status.ollama_available ? 'text-green-600' : 'text-red-600'" 
+                       x-text="status.ollama_available ? 'Activo' : 'Inactivo'"></p>
+                </div>
+                <div class="w-12 h-12 rounded-full flex items-center justify-center"
+                     :class="status.ollama_available ? 'bg-green-100' : 'bg-red-100'">
+                    <svg class="w-6 h-6" :class="status.ollama_available ? 'text-green-600' : 'text-red-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-2" x-text="status.ollama_model || 'No configurado'"></p>
+        </div>
+        
+        <!-- Profile Status -->
+        <div class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500">Perfil</p>
+                    <p class="text-2xl font-bold mt-1" :class="status.profile_configured ? 'text-green-600' : 'text-yellow-600'"
+                       x-text="status.profile_configured ? 'Configurado' : 'Pendiente'"></p>
+                </div>
+                <div class="w-12 h-12 rounded-full flex items-center justify-center"
+                     :class="status.profile_configured ? 'bg-green-100' : 'bg-yellow-100'">
+                    <svg class="w-6 h-6" :class="status.profile_configured ? 'text-green-600' : 'text-yellow-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+            </div>
+            <a href="/profile" class="text-xs text-primary-500 mt-2 hover:underline">Editar perfil →</a>
+        </div>
+        
+        <!-- Jobs Count -->
+        <div class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500">Ofertas Guardadas</p>
+                    <p class="text-2xl font-bold text-primary-600 mt-1" x-text="status.jobs_count"></p>
+                </div>
+                <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                    <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+            </div>
+            <a href="/jobs" class="text-xs text-primary-500 mt-2 hover:underline">Ver ofertas →</a>
+        </div>
+        
+        <!-- CVs Generated -->
+        <div class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500">CVs Generados</p>
+                    <p class="text-2xl font-bold text-green-600 mt-1" x-text="status.cvs_count"></p>
+                </div>
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+            </div>
+            <a href="/generated" class="text-xs text-primary-500 mt-2 hover:underline">Ver CVs →</a>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Quick Search -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">🔍 Búsqueda Rápida</h2>
+            <form @submit.prevent="quickSearch()">
+                <div class="flex gap-3">
+                    <input type="text" x-model="searchQuery" placeholder="Ej: Salesforce Developer"
+                           class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    <input type="text" x-model="searchLocation" placeholder="Madrid" 
+                           class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    <button type="submit" :disabled="status.current_task"
+                            class="px-6 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50">
+                        Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Recent Jobs -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">📋 Ofertas Recientes</h2>
+            <div x-show="recentJobs.length === 0" class="text-gray-400 text-center py-4">
+                No hay ofertas guardadas
+            </div>
+            <div class="space-y-3">
+                <template x-for="job in recentJobs.slice(0, 3)" :key="job.id">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <p class="font-medium text-gray-800" x-text="job.title"></p>
+                            <p class="text-sm text-gray-500" x-text="job.company + ' • ' + job.location"></p>
+                        </div>
+                        <button @click="generateCV(job.id)" :disabled="status.current_task"
+                                class="px-3 py-1 text-sm bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50">
+                            Generar CV
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How it Works -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-6">🚀 Cómo funciona AutoCV</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto gradient-bg rounded-full flex items-center justify-center text-white text-2xl font-bold mb-3">1</div>
+                <h3 class="font-semibold text-gray-800">Configura tu Perfil</h3>
+                <p class="text-sm text-gray-500 mt-1">Añade tu experiencia, habilidades y educación</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto gradient-bg rounded-full flex items-center justify-center text-white text-2xl font-bold mb-3">2</div>
+                <h3 class="font-semibold text-gray-800">Busca Ofertas</h3>
+                <p class="text-sm text-gray-500 mt-1">Encuentra ofertas en LinkedIn automáticamente</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto gradient-bg rounded-full flex items-center justify-center text-white text-2xl font-bold mb-3">3</div>
+                <h3 class="font-semibold text-gray-800">Genera CVs</h3>
+                <p class="text-sm text-gray-500 mt-1">La IA personaliza tu CV para cada oferta</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto gradient-bg rounded-full flex items-center justify-center text-white text-2xl font-bold mb-3">4</div>
+                <h3 class="font-semibold text-gray-800">¡Aplica!</h3>
+                <p class="text-sm text-gray-500 mt-1">Descarga y envía tus CVs personalizados</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function dashboard() {
+        return {
+            searchQuery: '',
+            searchLocation: 'Madrid',
+            recentJobs: [],
+            
+            async init() {
+                await this.loadRecentJobs();
+            },
+            
+            async loadRecentJobs() {
+                try {
+                    const response = await fetch('/api/jobs');
+                    const data = await response.json();
+                    this.recentJobs = data.jobs || [];
+                } catch (e) {
+                    console.error('Error loading jobs:', e);
+                }
+            },
+            
+            async quickSearch() {
+                if (!this.searchQuery) return;
+                
+                try {
+                    await this.$root.apiCall('/api/search', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            keywords: this.searchQuery,
+                            location: this.searchLocation,
+                            limit: 10
+                        })
+                    });
+                    this.$root.showToast('Búsqueda iniciada', 'success');
+                } catch (e) {
+                    // Error already shown by apiCall
+                }
+            },
+            
+            async generateCV(jobId) {
+                try {
+                    await this.$root.apiCall('/api/generate', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            job_id: jobId,
+                            include_cover_letter: true
+                        })
+                    });
+                    this.$root.showToast('Generación iniciada', 'success');
+                } catch (e) {
+                    // Error already shown by apiCall
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

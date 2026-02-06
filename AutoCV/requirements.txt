@@ -1,0 +1,40 @@
+# AutoCV - Dependencias
+# =====================
+
+# Web Scraping
+selenium>=4.15.0
+webdriver-manager>=4.0.1
+playwright>=1.40.0
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
+
+# IA / LLM
+ollama>=0.1.7
+langchain>=0.1.0
+langchain-community>=0.0.10
+
+# Generación de PDFs
+weasyprint>=60.0
+jinja2>=3.1.0
+
+# Procesamiento de datos
+pyyaml>=6.0.1
+pydantic>=2.5.0
+python-dotenv>=1.0.0
+
+# CLI e interfaz
+rich>=13.7.0
+click>=8.1.0
+inquirer>=3.2.0
+
+# Utilidades
+requests>=2.31.0
+aiohttp>=3.9.0
+python-dateutil>=2.8.0
+
+# Logging
+loguru>=0.7.2
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.23.0

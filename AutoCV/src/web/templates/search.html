@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar Ofertas{% endblock %}
+
+{% block content %}
+<div x-data="searchPage()">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Buscar Ofertas</h1>
+        <p class="text-gray-500 mt-1">Encuentra ofertas de trabajo en LinkedIn</p>
+    </div>
+    
+    <!-- Search Status Banner -->
+    <div x-show="isSearching" x-cloak 
+         class="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-xl">
+        <div class="flex items-center gap-4">
+            <div class="flex-shrink-0">
+                <svg class="w-8 h-8 text-primary-500 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-semibold text-primary-800">Buscando ofertas en LinkedIn...</h3>
+                <p class="text-sm text-primary-600" x-text="localStatus.task_message || 'Iniciando navegador...'"></p>
+                <div class="mt-2 h-2 bg-primary-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-primary-500 transition-all duration-500" :style="'width: ' + (localStatus.task_progress || 0) + '%'"></div>
+                </div>
+            </div>
+            <div class="text-2xl font-bold text-primary-600" x-text="(localStatus.task_progress || 0) + '%'"></div>
+        </div>
+    </div>
+    
+    <!-- Search Form -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <form @submit.prevent="search()">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Palabras clave</label>
+                    <input type="text" x-model="keywords" placeholder="Ej: Salesforce Developer, Python, ML Engineer..."
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                           :disabled="isSearching">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ubicación</label>
+                    <input type="text" x-model="location" placeholder="Madrid"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                           :disabled="isSearching">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Límite</label>
+                    <select x-model="limit" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            :disabled="isSearching">
+                        <option value="5">5 ofertas</option>
+                        <option value="10">10 ofertas</option>
+                        <option value="20">20 ofertas</option>
+                        <option value="50">50 ofertas</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Opciones de velocidad -->
+            <div class="mt-4 flex items-center gap-6">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" x-model="fastMode" 
+                           class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                           :disabled="isSearching">
+                    <span class="text-sm text-gray-700">🚀 Modo rápido (búsqueda paralela)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" x-model="fetchDescriptions" 
+                           class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                           :disabled="isSearching">
+                    <span class="text-sm text-gray-700">📄 Obtener descripciones completas</span>
+                </label>
+            </div>
+            
+            <div class="mt-6 flex items-center justify-between">
+                <p class="text-sm text-gray-500">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    La búsqueda puede tardar unos minutos dependiendo del número de ofertas
+                </p>
+                <button type="submit" :disabled="isSearching || !keywords"
+                        class="px-8 py-3 gradient-bg text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2">
+                    <template x-if="!isSearching">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </template>
+                    <template x-if="isSearching">
+                        <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                    </template>
+                    <span x-text="isSearching ? 'Buscando...' : 'Buscar en LinkedIn'"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Saved Searches -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">🔖 Búsquedas Guardadas</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <template x-for="(search, index) in savedSearches" :key="index">
+                <button @click="runSavedSearch(search)" 
+                        :disabled="isSearching"
+                        class="p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-all text-left disabled:opacity-50">
+                    <p class="font-medium text-gray-800" x-text="search.name"></p>
+                    <p class="text-sm text-gray-500" x-text="search.keywords + ' • ' + search.location"></p>
+                </button>
+            </template>
+        </div>
+    </div>
+    
+    <!-- Search Logs -->
+    <div x-show="logs.length > 0" class="bg-gray-900 rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-white">📋 Log de Búsqueda</h2>
+            <button @click="logs = []" class="text-gray-400 hover:text-white text-sm">Limpiar</button>
+        </div>
+        <div class="font-mono text-sm text-green-400 max-h-64 overflow-y-auto">
+            <template x-for="(log, index) in logs" :key="index">
+                <p x-text="log"></p>
+            </template>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function searchPage() {
+        return {
+            keywords: '',
+            location: 'Madrid',
+            limit: 10,
+            fastMode: true,
+            fetchDescriptions: true,
+            logs: [],
+            savedSearches: [],
+            localStatus: { current_task: null, task_progress: 0, task_message: '' },
+            
+            get isSearching() {
+                return this.localStatus.current_task === 'search';
+            },
+            
+            async init() {
+                await this.loadSavedSearches();
+                this.pollStatus();
+            },
+            
+            async loadSavedSearches() {
+                try {
+                    const response = await fetch('/api/settings');
+                    const data = await response.json();
+                    this.savedSearches = data.linkedin?.saved_searches || [];
+                } catch (e) {
+                    console.error('Error loading saved searches:', e);
+                }
+            },
+            
+            async search() {
+                if (!this.keywords) return;
+                
+                try {
+                    const response = await fetch('/api/search', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            keywords: this.keywords,
+                            location: this.location,
+                            limit: parseInt(this.limit),
+                            fast_mode: this.fastMode,
+                            fetch_descriptions: this.fetchDescriptions
+                        })
+                    });
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.detail || 'Error al iniciar búsqueda');
+                    }
+                    
+                    console.log('Búsqueda iniciada:', data);
+                    // Forzar actualización del status
+                    await this.updateStatus();
+                } catch (e) {
+                    console.error('Error en búsqueda:', e);
+                    alert('Error: ' + e.message);
+                }
+            },
+            
+            async runSavedSearch(search) {
+                this.keywords = search.keywords;
+                this.location = search.location || 'Madrid';
+                this.limit = search.limit || 10;
+                await this.search();
+            },
+            
+            async updateStatus() {
+                try {
+                    const response = await fetch('/api/status');
+                    this.localStatus = await response.json();
+                    
+                    if (this.isSearching) {
+                        const taskResponse = await fetch('/api/task/status');
+                        const taskData = await taskResponse.json();
+                        this.logs = taskData.logs || [];
+                        this.localStatus.task_progress = taskData.progress;
+                        this.localStatus.task_message = taskData.message;
+                    }
+                } catch (e) {
+                    console.error('Error updating status:', e);
+                }
+            },
+            
+            pollStatus() {
+                setInterval(() => this.updateStatus(), 1500);
+            }
+        }
+    }
+</script>
+{% endblock %}
